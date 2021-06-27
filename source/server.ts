@@ -2,9 +2,13 @@ import http from 'http';
 import express from 'express';
 import logging from './config/logging';
 import config from './config/config';
-import sampleRoutes from './routes/sample';
+import db from './config/sqlite';
+import rootRouter from './routes';
+
 
 const NAMESPACE = 'Server';
+db.sync().then(() => logging.info(NAMESPACE, 'connect to db'));
+
 const app = express();
 
 /**Logging the request */
@@ -33,7 +37,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api/sample', sampleRoutes);
+app.use('/', rootRouter);
 
 /**Error Handling */
 app.use((req, res, next) => {
