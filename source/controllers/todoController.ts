@@ -24,6 +24,26 @@ class TodoController {
             });
         }
     }
+    async read(req: Request, res: Response) {
+        try {
+            logging.info(NAMESPACE, 'enter read()', req.body);
+            const limit = req.query?.limit as number | undefined;
+            const records = await TodoInstance.findAll({ where: {}, limit: limit });
+            return res.json({
+                records,
+                msg: 'Fetched todos',
+                status: 200
+            });
+        }
+        catch (error) {
+            logging.error(NAMESPACE, 'Error while reading todo', error);
+            return res.json({
+                msg: 'fail to read todo',
+                status: 500,
+                route: '/read'
+            });
+        }
+    }
 }
 
 
