@@ -9,7 +9,7 @@ const NAMESPACE = 'ShiprocketController';
 
 const orderPayload: OrderPayload = {
     "order_id": "224-477",
-    "order_date": "2019-07-24 11:11",
+    "order_date": "2021-01-24 11:11",
     "pickup_location": "Jammu",
     "channel_id": "12345",
     "comment": "Reseller: M/s Goku",
@@ -72,7 +72,7 @@ class ShiprocketController {
         }
         catch (error) {
             logging.error(NAMESPACE, 'Error in getting auth token', error);
-            return res.json({
+            return res.status(500).json({
                 msg: 'fail to create todo',
                 status: 500,
                 route: '/create'
@@ -83,21 +83,33 @@ class ShiprocketController {
 
     async createAdhocOrder(req: Request, res: Response) {
         const { token } = req?.query;
-        if (!token)
-            return res.status(400).json({
-                msg: 'Authorization denied'
-            });
-        else {
-            const shiprocketApi = new ShiprocketApi(token as string);
-            const orderResponse: OrderResponse = await shiprocketApi.createOrder(orderPayload);
+        try {
+            if (!token)
+                return res.status(400).json({
+                    msg: 'Authorization denied'
+                });
+            else {
+                const shiprocketApi = new ShiprocketApi(token as string);
+                const orderResponse: any = await shiprocketApi.createOrder(orderPayload);
 
-            return res.status(201).json({
-                orderResponse
-            });
+                return res.status(201).json({
+                    orderResponse
+                });
+            }
+        } catch (error) {
 
+            logging.error(NAMESPACE, 'Error in creating order', error.response.data);
+            return res.status(500).json({
+                msg: 'fail to create order',
+                status: 500,
+                route: '/create'
+            });
         }
 
+
     }
+
 }
+
 
 export default new ShiprocketController();
