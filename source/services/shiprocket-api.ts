@@ -1,17 +1,17 @@
 import HttpClient from "./http-client";
 import User from '../dto/user';
-import { Order } from "../dto/order";
+import { OrderPayload } from "../dto/order-payload";
 
 
 class ShiprocketApi extends HttpClient {
-    public constructor() {
-        super('https://apiv2.shiprocket.in/v1/external');
+    public constructor(token?: string) {
+        super('https://apiv2.shiprocket.in/v1/external', token);
 
     }
 
     public login = (user: User) => this.instance.post<{ token: string }>('/auth/login', user);
-    public createOrder = (order: Order) => this.instance.post('orders/create/adhoc', order);
+    public createOrder = (order: OrderPayload) => this.instance.post<any>('/orders/create/adhoc', order);
 }
 
 
-export default new ShiprocketApi();
+export default ShiprocketApi;

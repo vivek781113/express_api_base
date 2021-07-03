@@ -9,7 +9,7 @@ export interface OrderItem {
     hsn: number;
 }
 
-export interface Order {
+export interface OrderPayload {
     order_id: string;
     order_date: string;
     pickup_location: string;
