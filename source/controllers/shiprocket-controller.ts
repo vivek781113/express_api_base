@@ -102,7 +102,7 @@ class ShiprocketController {
             return res.status(500).json({
                 msg: 'fail to create order',
                 status: 500,
-                route: '/create'
+                route: '/createOrder'
             });
         }
 
