@@ -7,11 +7,14 @@ declare module 'axios' {
 abstract class HttpClient {
     protected readonly instance: AxiosInstance;
 
-    public constructor(baseURL: string) {
+    public constructor(baseURL: string, token?: string | null) {
         this.instance = axios.create({
             baseURL,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: token ? `Bearer ${token}` : ''
+            }
         });
-
         this._initializeResponseInterceptor();
     }
 
