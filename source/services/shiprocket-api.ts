@@ -1,6 +1,7 @@
 import HttpClient from "./http-client";
 import User from '../dto/user';
 import { OrderPayload } from "../dto/order-payload";
+import { ProductPayload } from "../dto/product-payload";
 
 
 class ShiprocketApi extends HttpClient {
@@ -11,6 +12,7 @@ class ShiprocketApi extends HttpClient {
 
     public login = (user: User) => this.instance.post<{ token: string }>('/auth/login', user);
     public createOrder = (order: OrderPayload) => this.instance.post<any>('/orders/create/adhoc', order);
+    public createProduct = (product: ProductPayload) => this.instance.post<any>('/products', product);
 }
 
 

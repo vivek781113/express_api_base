@@ -28,7 +28,15 @@ class TodoController {
         try {
             logging.info(NAMESPACE, 'enter read()', req.body);
             const limit = req.query?.limit as number | undefined;
-            const records = await TodoInstance.findAll({ where: {}, limit: limit });
+            let page = req.query?.page as number | undefined;
+
+            if (!page)
+                page = 0;
+            let offset = 0;
+
+            if (limit)
+                offset = 0 + (page - 1) * limit;
+            const records = await TodoInstance.findAll({ where: {}, limit: limit, offset: offset });
             return res.json({
                 records,
                 msg: 'Fetched todos',

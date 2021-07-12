@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/token', Middleware.handleValidationError, ShiprocketController.authToken);
 router.post('/createOrder', Middleware.handleValidationError, ShiprocketController.createAdhocOrder);
+router.post('/product', Middleware.handleValidationError, ShiprocketController.createProduct);
 
 export = router;

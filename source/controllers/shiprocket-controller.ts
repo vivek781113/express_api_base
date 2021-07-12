@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import logging from '../config/logging';
 import { OrderPayload } from '../dto/order-payload';
 import { OrderResponse } from '../dto/order-response';
+import { ProductPayload } from '../dto/product-payload';
 import User from '../dto/user';
 import ShiprocketApi from '../services/shiprocket-api';
 
@@ -31,6 +32,38 @@ class ShiprocketController {
 
     }
 
+    async createProduct(req: Request, res: Response) {
+        const { token } = req?.query;
+        const payload = req.body as ProductPayload;
+        try {
+            if (!token)
+                return res.status(401).json({
+                    msg: 'Authorization denied'
+                });
+            else if (!payload)
+                return res.status(400).json({
+                    msg: 'Bad request'
+                });
+            else {
+                const shiprocketApi = new ShiprocketApi(token as string);
+                const newProduct: any = await shiprocketApi.createProduct(payload);
+
+                return res.status(201).json({
+                    newProduct
+                });
+            }
+        } catch (error) {
+
+            logging.error(NAMESPACE, 'Error in creating order', error.response.data);
+            return res.status(500).json({
+                msg: 'fail to create order',
+                status: 500,
+                route: '/createOrder'
+            });
+        }
+
+
+    }
     async createAdhocOrder(req: Request, res: Response) {
         const { token } = req?.query;
         const payload = req.body as OrderPayload;
@@ -63,6 +96,7 @@ class ShiprocketController {
 
 
     }
+
 
 }
 
