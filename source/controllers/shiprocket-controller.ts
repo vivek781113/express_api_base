@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import logging from '../config/logging';
 import { OrderPayload } from '../dto/order-payload';
 import { OrderResponse } from '../dto/order-response';
 import { ProductPayload } from '../dto/product-payload';
 import User from '../dto/user';
+import { ProductInstance } from '../model/product';
 import ShiprocketApi from '../services/shiprocket-api';
 
 const NAMESPACE = 'ShiprocketController';
@@ -46,17 +48,18 @@ class ShiprocketController {
                 });
             else {
                 const shiprocketApi = new ShiprocketApi(token as string);
-                const newProduct: any = await shiprocketApi.createProduct(payload);
-
+                const response = await shiprocketApi.createProduct(payload);
+                const id = uuidv4();
+                const record = await ProductInstance.create({ ...req.body, id });
                 return res.status(201).json({
-                    newProduct
+                    record
                 });
             }
         } catch (error) {
 
-            logging.error(NAMESPACE, 'Error in creating order', error.response.data);
+            logging.error(NAMESPACE, 'Error in creating product', error.response.data);
             return res.status(500).json({
-                msg: 'fail to create order',
+                msg: `fail to create product with error ${error?.response?.data}`,
                 status: 500,
                 route: '/createOrder'
             });
