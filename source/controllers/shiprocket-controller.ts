@@ -33,7 +33,6 @@ class ShiprocketController {
         }
 
     }
-
     async createProduct(req: Request, res: Response) {
         const { token } = req?.query;
         const payload = req.body as ProductPayload;
