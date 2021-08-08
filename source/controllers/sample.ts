@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import logging from '../config/logging';
 import reqApi from '../services/req-api';
-
+import shortid from 'shortid';
 
 const NAMESPACE = 'Sample Controller'
 
@@ -19,7 +19,24 @@ const sampleHealthCheck = async (req: Request, res: Response, next: NextFunction
     });
 };
 
+const fetchData = (req: Request, res: Response, next: NextFunction) => {
+    logging.info(NAMESPACE, `fetchData() called`);
+    return res.status(200).json({
+        'message': 'request completed'
+    });
+}
+const genAPIKey = (req: Request, res: Response, next: NextFunction) => {
+    logging.info(NAMESPACE, `genAPIKey() called`);
+    const API_KEY = shortid.generate();
+    return res.status(201).json({
+        'apiKey': API_KEY
+    });
+
+}
+
 
 export default {
-    sampleHealthCheck
+    sampleHealthCheck,
+    fetchData,
+    genAPIKey
 };

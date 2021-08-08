@@ -9,6 +9,16 @@ class Middleware {
         }
         next();
     }
+    auth(req: Request, res: Response, next: NextFunction) {
+        const { token } = req.query;
+        if (!token) {
+            return res.status(401).json({
+                'message': 'User not authorized to view this page'
+            });
+        } else {
+            next();
+        }
+    }
 }
 
 
