@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import logging from '../config/logging';
 import reqApi from '../services/req-api';
 import shortid from 'shortid';
+import fs from 'fs';
+import { EOL } from 'os'
+const path = require('path');
 
 const NAMESPACE = 'Sample Controller'
 
@@ -28,6 +31,10 @@ const fetchData = (req: Request, res: Response, next: NextFunction) => {
 const genAPIKey = (req: Request, res: Response, next: NextFunction) => {
     logging.info(NAMESPACE, `genAPIKey() called`);
     const API_KEY = shortid.generate();
+    const root = path.resolve('./');
+    const validKeyPath = `${root}/source/keys/valid-keys.txt`;
+    const writer = fs.createWriteStream(validKeyPath, { flags: 'a' });
+    writer.write(`${API_KEY}${EOL}`);
     return res.status(201).json({
         'apiKey': API_KEY
     });
@@ -40,3 +47,4 @@ export default {
     fetchData,
     genAPIKey
 };
+
